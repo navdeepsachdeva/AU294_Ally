@@ -1,0 +1,48 @@
+- name: Debug Strategy Dev Env Only
+  hosts: servera*
+  gather_facts: false
+  strategy: debug
+  tasks:
+    - name: Task 1
+      ansible.builtin.shell: sleep 2
+      register: captured
+
+    - name: Task 20
+      ansible.builtin.shell: sleep 2
+
+    - name: Install Web Package Task 21
+      ansible.builtin.dnf:
+        name: httpdd
+        state: present
+      become: true
+      # task.args
+      # task.args['name']='httpd'
+      # task.args
+      # redo
+
+    - name: Deploy Simple App Task 22
+      ansible.builtin.copy:
+        content: "Hello Ally Group {{ captured.changed }}"
+        dest: /var/wwww/html/index.html
+        mode: '0644'
+      become: true
+      # task.args
+      # task.args['dest']='/var/www/html/index.html'
+      # task.args
+      # redo
+
+    - name: Restart my service Task 23
+      ansible.builtin.service:
+        name: httpddd
+        stateee: restarted
+      become: true
+      # task.args
+      # task.args['name']='httpd'
+      # task.args['state']='restarted'
+      # del(task.args['stateee'])
+      # task.args
+      # redo
+
+    - name: Task 24
+      ansible.builtin.debug:
+        msg: "FINALLY DONE"
