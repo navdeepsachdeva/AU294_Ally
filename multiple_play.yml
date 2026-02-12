@@ -1,0 +1,47 @@
+- name: Configure Web Server
+  hosts: servera*
+  gather_facts: false
+  remote_user: devops
+  become: true
+  tasks:
+    - name: Open Firewall Port
+      ansible.posix.firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Deploy Simple App
+      ansible.builtin.copy:
+        content: "Hello Ally Group"
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Restart my service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+
+- name: Test Web Server
+  hosts: serverb*
+  gather_facts: false
+  remote_user: student
+  become: false
+  tasks:
+    - name: Ping System
+      ansible.builtin.ping:
+
+    - name: Access Web Server
+      ansible.builtin.uri:
+        url: http://servera.lab.example.com:80
+        return_content: true
+      register: captured
+
+    - name: Print the output of previous task
+      ansible.builtin.debug:
+        msg: "{{ captured.content  }}"

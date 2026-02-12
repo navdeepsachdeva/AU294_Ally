@@ -1,0 +1,27 @@
+---
+# tasks file for web_server
+
+- name: Install Web Package
+  ansible.builtin.dnf:
+    name: "{{ web_server_package }}"
+    state: present
+  notify:
+    - Package Installed
+    - Restart Web Service
+    - Email Client
+
+- name: Deploy Simple App
+  ansible.builtin.copy:
+    content: "{{ web_server_content }}"
+    dest: "{{ web_server_path }}/{{ web_server_index }}"
+    mode: '0644'
+  notify:
+    - Restart Web Service
+    - App Deployed
+
+- name: Create Info Html Page
+  ansible.builtin.template:
+    src: ./simple.j2
+    dest: "{{ web_server_path }}/{{ web_server_info }}"
+  notify:
+    - System Info Deployed

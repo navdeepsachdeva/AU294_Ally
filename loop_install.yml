@@ -1,0 +1,29 @@
+- name: Setup Web Server
+  hosts: servera*
+  gather_facts: false
+  become: true
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Install multiple Package BAD WAY
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages }}"
+
+    - name: Install multiple Package Good WAY
+      ansible.builtin.dnf:
+        name: "{{ packages }}"
+        state: present
+
+    - name: Restart multiple service ONLY WAY
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+      loop: "{{ services }}"
+
+    - name: Restart multiple service WILL NOT WORK
+      ansible.builtin.service:
+        name: "{{ services }}"
+        state: restarted
+      # loop: "{{ services }}"

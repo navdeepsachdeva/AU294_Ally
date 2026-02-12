@@ -1,0 +1,68 @@
+- name: Roles Demo
+  hosts: servera*
+  gather_facts: false
+
+  pre_tasks:
+    - name: Pre Task - Collect Limited Facts
+      ansible.builtin.setup:
+        gather_subset:
+          - '!all'
+          - 'min'
+          - 'network'
+          - 'hardware'
+
+    - name: Pre Task - Custom assert Module Message
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['python_version'] > "3.12.0"
+          - ansible_facts['memory_mb']['real']['total'] > 1500
+        fail_msg: "Not Enough Resources"
+        success_msg: "Good to Go"
+
+    - name: Pre Task - Ready to Update Server
+      ansible.builtin.shell: sleep 2
+      notify:
+        - Services_Down
+
+  roles:
+    - role: web_server
+      web_server_content: "Hello from PlayBook"
+      become: true
+    # - role: geerlingguy.php
+
+  tasks:
+    - name: Extra Task
+      ansible.builtin.shell: sleep 2
+      notify:
+        - Extra_Handler
+
+  post_tasks:
+    - name: Post Task - Server Updated
+      ansible.builtin.shell: sleep 2
+      notify:
+        - Services_UP
+
+    - name: Post Task - Ping System
+      ansible.builtin.ping:
+      register: captured
+
+    - name: Post Task - Test the Server
+      ansible.builtin.include_role:
+        name: test_server
+      when:
+        - meme is not defined
+        - captured.ping == "pong"
+
+
+  handlers:
+    - name: Extra_Handler
+      ansible.builtin.debug:
+        msg: "Extra Handler from Play"
+
+    - name: Services_Down
+      ansible.builtin.debug:
+        msg: "Instragram Down Sleep/Read Book"
+
+    - name: Services_UP
+      ansible.builtin.debug:
+        msg: "Instragram UP Start Wasting Time"

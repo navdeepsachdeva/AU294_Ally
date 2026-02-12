@@ -1,0 +1,13 @@
+- name: LDAP Server Task 1
+  ansible.builtin.debug:
+    msg: "LDAP Server Task 1"
+
+- name: LDAP Server Task 2
+  ansible.builtin.command: sleep 4
+
+- name: LDAP Server Task 3
+  ansible.builtin.debug:
+    msg: "LDAP Server Task 3"
+
+- name: LDAP Server Task 4
+  ansible.builtin.command: sleep 4

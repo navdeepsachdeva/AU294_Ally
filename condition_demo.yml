@@ -1,0 +1,52 @@
+- name: Condition Demo
+  hosts: servera*
+  gather_facts: false
+  become: false
+  vars:
+    someuser1: "Aftab"
+    someuser2: "Nav"
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Collect Limited Facts
+      ansible.builtin.setup:
+        gather_subset:
+          - '!all'
+          - 'min'
+          - 'network'
+          - 'hardware'
+    - name: Task 1
+      ansible.builtin.copy:
+        content: |
+          Floor           = {{ elevator_floor }}
+          Arch            = {{ ansible_architecture }}
+          Arch            = {{ ansible_facts.architecture }}
+          Arch            = {{ ansible_facts['architecture'] }}
+          Date            = {{ ansible_facts['date_time']['date'] }}
+          Time            = {{ ansible_facts['date_time']['time'] }}
+          IP Address      = {{ ansible_default_ipv4.address }}
+          OS              = {{ ansible_distribution }}
+          Version         = {{ ansible_distribution_version }}
+          Kernel          = {{ ansible_facts['kernel'] }}
+          FQDN            = {{ ansible_facts['fqdn'] }}
+          HostName        = {{ ansible_facts['hostname'] }}
+          Total Memory    = {{ ansible_facts['memory_mb']['real']['total'] }}
+          Free Memory     = {{ ansible_facts['memory_mb']['real']['free'] }}
+          Python Version  = {{ ansible_facts['python_version'] }}
+          Dept Name       = {{ ansible_facts.ansible_local.emp.dept.d_name }}
+          Dept Location   = {{ ansible_facts.ansible_local.emp.dept.d_location }}
+          User Name       = {{ ansible_facts.ansible_local.emp.user.e_name }}
+        dest: /tmp/file1
+        mode: '0644'
+
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: vsftpd
+        state: present
+      become: true
+      when:
+        - ansible_facts['memory_mb']['real']['total'] > 1500
+        - ansible_facts.ansible_local.emp.dept.d_location == "detroit"
+        - someuser1 not in simple_list or someuser2 not in simple_list
+
+      # when: ansible_facts['memory_mb']['real']['total'] > 1500 and ansible_facts.ansible_local.emp.dept.d_location == "detroit"

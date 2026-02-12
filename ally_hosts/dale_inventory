@@ -1,0 +1,4 @@
+# [ally]
+# Web_London ansible_host=servere.lab.example.com
+# DB_Detroit ansible_host=serverf.lab.example.com
+# FTP_NewYork ansible_host=192.168.5.5

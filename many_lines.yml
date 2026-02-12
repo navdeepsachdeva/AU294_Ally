@@ -1,0 +1,26 @@
+- name: Multiple Lines Handling
+  hosts: ally*
+  gather_facts: false
+  tasks:
+    - name: Task 1
+      ansible.builtin.copy:
+        content: "Avoid the inline block format because it is harder to read. However, there is at least one situation in which it is more commonly used."
+        dest: /tmp/file1
+
+    - name: Task 2
+      ansible.builtin.copy:
+        content: >
+          Avoid the inline block format
+          because it is harder to read. However,
+          there is at least one situation in which
+          it is more commonly used.
+        dest: /tmp/file2
+
+    - name: Task 3
+      ansible.builtin.copy:
+        content: |
+          Avoid the inline block format
+          because it is harder to read. However,
+          there is at least one situation in which
+          it is more commonly used.
+        dest: /tmp/file3

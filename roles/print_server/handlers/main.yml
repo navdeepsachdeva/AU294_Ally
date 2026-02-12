@@ -1,0 +1,10 @@
+---
+# handlers file for print_server
+
+- name: Print_Sleep
+  ansible.builtin.debug:
+    msg: "Enough Sleep in Print Server"
+
+- name: Print_File_Setup
+  ansible.builtin.debug:
+    msg: "Print Server File Created"

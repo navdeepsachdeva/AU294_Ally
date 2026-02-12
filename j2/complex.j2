@@ -1,0 +1,62 @@
+<html>
+<head>
+ <title>Information Page</title>
+</head>
+<body>
+  {# Template for Collect Sys Info #}
+
+ {% for sys in groups["control"] %}
+
+      ## Control Node {{ hostvars[sys].inventory_hostname }} Information Begins ##
+
+  Current Sys	  = {{ sys }}
+  Floor           = {{ hostvars[sys].elevator_floor }}
+  FQDN            = {{ hostvars[sys].ansible_facts['fqdn'] }}
+  HostName        = {{ hostvars[sys].ansible_facts['hostname'] }}
+  Arch            = {{ hostvars[sys].ansible_facts['architecture'] }}
+  Date            = {{ hostvars[sys].ansible_facts['date_time']['date'] }}
+  Time            = {{ hostvars[sys].ansible_facts['date_time']['time'] }}
+  IP Address      = {{ hostvars[sys].ansible_default_ipv4.address }}
+  OS              = {{ hostvars[sys].ansible_distribution }}
+  Version         = {{ hostvars[sys].ansible_distribution_version }}
+  Kernel          = {{ hostvars[sys].ansible_facts['kernel'] }}
+  Total Memory    = {{ hostvars[sys].ansible_facts['memory_mb']['real']['total'] }}
+  Free Memory     = {{ hostvars[sys].ansible_facts['memory_mb']['real']['free'] }}
+  Python Version  = {{ hostvars[sys].ansible_facts['python_version'] }}
+  Dept Name       = {{ hostvars[sys].ansible_facts.ansible_local.emp.dept.d_name | default("Not Available") }}
+  Dept Location   = {{ hostvars[sys].ansible_facts.ansible_local.emp.dept.d_location | default("Not Available") }}
+  User Name       = {{ hostvars[sys].ansible_facts.ansible_local.emp.user.e_name | default("Not Available") }}
+
+      ## Control Node {{ hostvars[sys].inventory_hostname }} Information Begins ##
+
+ {% endfor %}
+
+ {% for sys in groups["all"] %}
+   {% if sys not in groups["control"] %}
+
+      ## Managed Host {{ hostvars[sys].inventory_hostname }} Information Begins ##
+
+  Current Sys	  = {{ sys }}
+  Floor           = {{ hostvars[sys].elevator_floor }}
+  FQDN            = {{ hostvars[sys].ansible_facts['fqdn'] }}
+  HostName        = {{ hostvars[sys].ansible_facts['hostname'] }}
+  Arch            = {{ hostvars[sys].ansible_facts['architecture'] }}
+  Date            = {{ hostvars[sys].ansible_facts['date_time']['date'] }}
+  Time            = {{ hostvars[sys].ansible_facts['date_time']['time'] }}
+  IP Address      = {{ hostvars[sys].ansible_default_ipv4.address }}
+  OS              = {{ hostvars[sys].ansible_distribution }}
+  Version         = {{ hostvars[sys].ansible_distribution_version }}
+  Kernel          = {{ hostvars[sys].ansible_facts['kernel'] }}
+  Total Memory    = {{ hostvars[sys].ansible_facts['memory_mb']['real']['total'] }}
+  Free Memory     = {{ hostvars[sys].ansible_facts['memory_mb']['real']['free'] }}
+  Python Version  = {{ hostvars[sys].ansible_facts['python_version'] }}
+  Dept Name       = {{ hostvars[sys].ansible_facts.ansible_local.emp.dept.d_name | default("Not Available") }}
+  Dept Location   = {{ hostvars[sys].ansible_facts.ansible_local.emp.dept.d_location | default("Not Available") }}
+  User Name       = {{ hostvars[sys].ansible_facts.ansible_local.emp.user.e_name | default("Not Available") }}
+
+      ## Managed Host {{ hostvars[sys].inventory_hostname }} Information Begins ##
+
+   {% endif %}
+ {% endfor %}
+</body>
+</html>

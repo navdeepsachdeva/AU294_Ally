@@ -1,0 +1,33 @@
+- name: Dependency Task Register Without Handlers
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      register: install_out
+
+    - name: Print Install
+      ansible.builtin.debug:
+        msg: "{{ install_out }}"
+
+    - name: Deploy Simple App
+      ansible.builtin.copy:
+        content: "Hello Ally Group Detroit"
+        dest: /var/www/html/index.html
+        mode: '0644'
+      register: deploy_out
+
+    - name: Print Deploy
+      ansible.builtin.debug:
+        msg: "{{ deploy_out }}"
+
+    - name: Restart Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+      when: install_out.changed
+      # when: install_out.changed or deploy_out.changed
+      # when: install_out.changed == true or deploy_out.changed == true

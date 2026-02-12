@@ -1,0 +1,56 @@
+- name: failed_when/fail module/assert module when Demo
+  hosts: servera*
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Extra Task 
+      ansible.builtin.debug:
+        msg: "We are on {{ elevator_floor }}"
+
+    - name: Update Web Package
+      ansible.builtin.dnf:
+        name: httpd
+        state: latest
+      register: captured
+      # failed_when: not captured.changed
+      # change status from ok to fatal
+      # Stop playbook forcefully
+      notify:
+        - Package Installed
+        - Restart Web Service
+
+    # - name: Custom fail Module Message
+    #   ansible.builtin.fail:
+    #     msg: "Custom Failed {{ captured.msg }}"
+    #   when: not captured.changed
+
+    - name: Custom assert Module Message
+      ansible.builtin.assert:
+        that:
+          - captured.changed
+          - ansible_facts['memory_mb']['real']['total'] > 1500
+        fail_msg: "Custom Failed {{ captured.msg }}"
+        success_msg: "Updated Successfully"
+
+    - name: Deploy Simple App
+      ansible.builtin.copy:
+        content: "Hello Ally Group Detroit"
+        dest: /var/www/html/index.html
+        mode: '0644'
+      notify:
+        - Restart Web Service
+        - App Deployed
+
+  handlers:
+    - name: App Deployed
+      ansible.builtin.debug:
+        msg: "Success App Deployed"
+
+    - name: Restart Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+
+    - name: Package Installed
+      ansible.builtin.debug:
+        msg: "Success Package Installed"

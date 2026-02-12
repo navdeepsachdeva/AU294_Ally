@@ -1,0 +1,54 @@
+- name: Variable Demo
+  hosts: servera*
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Collect Limited System Facts
+      ansible.builtin.setup:
+        gather_subset:
+          - '!all'
+          - 'min'
+          - 'network'
+          - 'hardware'
+    - name: Print System Facts
+      ansible.builtin.debug:
+        msg: |
+          Arch            = {{ ansible_facts['architecture'] }}
+          Time            = {{ ansible_facts['date_time']['time'] }}
+          IP Address      = {{ ansible_default_ipv4.address }}
+          FQDN            = {{ ansible_facts['fqdn'] }}
+          HostName        = {{ ansible_facts['hostname'] }}
+          Free Memory     = {{ ansible_facts['memory_mb']['real']['free'] }}
+          Python Version  = {{ ansible_facts['python_version'] }}
+
+
+    - name: Collect Package Facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Print Package Facts
+      ansible.builtin.debug:
+        msg: |
+          Http Version = "{{ ansible_facts.packages.httpd[0].version }}"
+          Http Arch = "{{ ansible_facts.packages.httpd[0].arch }}"
+          Http release = "{{ ansible_facts.packages.httpd[0].release }}"
+
+    - name: Collect Service Facts
+      ansible.builtin.service_facts:
+
+    - name: Print Service Facts
+      ansible.builtin.debug:
+        msg: |
+          Name    = "{{ ansible_facts['services']['httpd.service']['name'] }}"
+          state   = "{{ ansible_facts['services']['httpd.service']['state'] }}"
+          status  = "{{ ansible_facts['services']['httpd.service']['status'] }}"
+        # msg: "{{ ansible_facts.services.httpd.service }}"
+
+    - name: Run Some Task
+      ansible.builtin.debug:
+        msg: "{{ ansible_facts['distribution'] }}"
+      when:
+        - ansible_facts['memory_mb']['real']['total'] > 1500
+        - ansible_facts.ansible_local.emp.dept.d_location == "detroit"
+        - ansible_facts.packages.httpd[0].version >= "2.4.0"
+        - ansible_facts['services']['httpd.service']['status'] == "disabled"

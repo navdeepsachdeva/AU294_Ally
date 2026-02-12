@@ -1,0 +1,23 @@
+---
+# handlers file for web_server
+
+- name: App Deployed
+  ansible.builtin.debug:
+    msg: "Success {{ web_server_path }}/{{ web_server_index }} App Deployed"
+
+- name: Restart Web Service
+  ansible.builtin.service:
+    name: "{{ web_server_service }}"
+    state: "{{ web_server_state }}"
+
+- name: Package Installed
+  ansible.builtin.debug:
+    msg: "Success {{ web_server_package }} Package Installed"
+
+- name: System Info Deployed
+  ansible.builtin.debug:
+    msg: "Success {{ web_server_path }}/{{ web_server_info }} Page Deployed"
+
+- name: Email Client
+  ansible.builtin.debug:
+    msg: "Inform Client Right NOW"

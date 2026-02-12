@@ -1,0 +1,37 @@
+- name: Variable Demo
+  hosts:
+    - web
+    - london
+  gather_facts: false
+  
+  ## Bad Way
+  vars:
+    elevator_floor: "Level 12 Play vars"
+    var1: "youme"
+
+  ## Dev Env Only not Prod
+  vars_prompt:
+    - name: elevator_floor
+      prompt: "Which floor your are Going ?"
+      private: false
+
+  vars_files:
+    - ./vars/outside_vars.yml
+
+  tasks:
+    - name: Task 1
+      ansible.builtin.copy:
+        content: "{{ elevator_floor }}"
+        dest: /tmp/file1
+        mode: '0644'
+
+    - name: Task 2
+      ansible.builtin.debug:
+        msg: >
+          On {{ elevator_floor }} for 
+          {{ inventory_hostname }}
+           with {{ users.bjones.first_name }}
+           and {{ users['acook']['first_name'] }}
+    - name: Task 3
+      ansible.builtin.debug:
+        msg: On {{ you }}

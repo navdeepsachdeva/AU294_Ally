@@ -1,0 +1,14 @@
+galaxy_info:
+  author: Aftab A
+  description: Setup Web Server on Linux
+  company: Ally Financial
+
+  license: license (GPL-2.0-or-later, MIT, etc)
+
+  min_ansible_version: 2.1
+
+  galaxy_tags: []
+
+dependencies:
+  - print_server
+  - security_server

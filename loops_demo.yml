@@ -1,0 +1,43 @@
+- name: Loops Demo
+  hosts: servera*
+  gather_facts: false
+  vars_files:
+    - vars/outside_vars.yml
+  tasks:
+    - name: Print Simple List 
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ simple_list }}"
+      # with_items: "{{ simple_list }}"
+
+    - name: Print Complex List 
+      ansible.builtin.debug:
+        msg: "{{ item.fn }} == {{ item['ln'] }}"
+      loop: "{{ complex_list }}"
+      # with_list: "{{ complex_list }}"
+
+    - name: Print Employee Dict
+      ansible.builtin.debug:
+        msg: "{{ item['key'] }} ++ {{ item['value'] }}"
+      loop: "{{ emp_dict | dict2items }}"
+      # with_dict: "{{ emp_dict }}"
+
+    - name: Create Many Users
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+        # msg: "user{{ item }}"
+      with_sequence: start=1 end=6 format=user%x
+
+    
+    - name: Run many Commands
+      ansible.builtin.shell: "{{ item }}"
+      register: hannah_output
+      loop:
+        - tail -n 2 /etc/passwd
+        - hostname
+        - echo $USER
+
+    - name: Print the Output
+      ansible.builtin.debug:
+        msg: "{{ item['item'] }} -- {{ item['stdout_lines'] }}"
+      loop: "{{ hannah_output.results }}"

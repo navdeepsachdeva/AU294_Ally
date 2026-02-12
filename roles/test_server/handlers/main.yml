@@ -1,0 +1,6 @@
+---
+# handlers file for test_server
+
+- name: Test_Sleep_Handler
+  ansible.builtin.debug:
+    msg: "Simple Test Handler"

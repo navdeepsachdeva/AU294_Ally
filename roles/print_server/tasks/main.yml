@@ -1,0 +1,15 @@
+---
+# tasks file for print_server
+
+- name: Start Printing
+  ansible.builtin.shell: sleep 4
+  notify:
+    - Print_Sleep
+
+- name: Task 1
+  ansible.builtin.copy:
+    content: "{{ elevator_floor }} in {{ ansible_facts['distribution'] }}"
+    dest: /tmp/{{ ansible_facts['distribution'] }}
+    mode: '0644'
+  notify:
+    - Print_File_Setup

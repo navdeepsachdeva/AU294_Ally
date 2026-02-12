@@ -1,0 +1,12 @@
+- name: Collect All Systems Info Template
+  hosts: all
+  gather_facts: true
+  become: true
+
+  tasks:
+
+    - name: Create Info Html Page
+      ansible.builtin.template:
+        src: ./j2/complex.j2
+        dest: /tmp/info.html
+      when: inventory_hostname in groups["control"]

@@ -1,0 +1,11 @@
+- name: Play
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Task 1
+      ansible.builtin.debug:
+        msg: "Hello World"
+    # - name: Task 2
+    #   ansible.builtin.copy:
+    #     content: "HELLO ME"
+    #     dest: /tmp/file

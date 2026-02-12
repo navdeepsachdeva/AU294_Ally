@@ -1,0 +1,22 @@
+## INI Format ##
+## = symbol ##
+
+[control]
+workstation.lab.example.com
+
+[web]
+servera.lab.example.com
+serverd.lab.example.com elevator_floor="Level 8 Inventory file SD"
+
+[london]
+serverb.lab.example.com
+
+[detroit]
+serverc.lab.example.com
+
+[combine:children]
+detroit
+london
+
+[all:vars]
+elevator_floor="Level 3 Inventory file"

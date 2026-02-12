@@ -1,0 +1,28 @@
+- name: Ignore Errors Demo
+  hosts: servera*
+  gather_facts: false
+  become: true
+  # Bad Way
+  # ignore_errors: true
+  tasks:
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Will NOT Work
+      ansible.builtin.debug:
+        msg: "{{ myvar }}"
+      ignore_errors: true
+      # Good Way
+
+    - name: Deploy Simple App
+      ansible.builtin.copy:
+        content: "Hello Ally Group"
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Restart my service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted

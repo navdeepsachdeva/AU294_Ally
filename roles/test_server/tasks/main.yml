@@ -1,0 +1,17 @@
+---
+# tasks file for test_server
+
+- name: Ready to Test
+  ansible.builtin.shell: sleep 2
+  notify:
+    - Test_Sleep_Handler
+
+- name: Access Web Server
+  ansible.builtin.uri:
+    url: http://servera.lab.example.com:80
+    return_content: true
+  register: captured
+
+- name: Print the output of previous task
+  ansible.builtin.debug:
+    msg: "{{ captured.content  }}"

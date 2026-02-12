@@ -1,0 +1,49 @@
+elevator_floor: "Level 14 Play vars_files"
+
+packages:
+  - httpd
+  - vsftpd
+
+services:
+  - httpd
+  - vsftpd
+
+simple_list:
+  - Aftab
+  - Jack
+  - Iffat
+  - Hannah
+
+complex_list:
+  - fn: Aftab
+    ln: F
+  - fn: Jack
+    ln: K
+  - fn: Iffat
+    ln: i
+  - fn: Hannah
+    ln: L
+
+emp_dict:
+  Aftab: F
+  Jack: K
+  Iffat: i
+  Hannah: L
+
+users:
+  bjones:
+    first_name: Bob
+    last_name: Jones
+    home_dir: /users/bjones
+  acook:
+    first_name: Anne
+    last_name: Cook
+    home_dir: /users/acook
+# you: somebody
+you: !vault |
+              $ANSIBLE_VAULT;1.1;AES256
+              35313438336630356264323234373832616333636239326563366539313330373763653262373863
+              3861656238666262643031363630656434616362356163610a383337336437356463386237663361
+              30383361383931633639633761653561313363353363336231626130323330616530666339313861
+              3030316435313865320a626333353464623333393664383633376131613930393763366437343966
+              3633

@@ -1,0 +1,47 @@
+- name: Dependency Task WIth Handlers
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      notify:
+        - Package Installed
+        - Restart Web Service
+        - Email Client
+
+    - name: RUN all Notified Handlers NOW
+      ansible.builtin.meta: flush_handlers
+
+    - name: Deploy Simple App
+      ansible.builtin.copy:
+        content: "Hello Ally Group Detroit"
+        dest: /var/www/html/index.html
+        mode: '0644'
+      notify:
+        - Restart Web Service
+        - App Deployed
+
+  handlers:
+    - name: Extra Handler 
+      ansible.builtin.debug:
+        msg: "NO ONE CALLED ME"
+
+    - name: App Deployed
+      ansible.builtin.debug:
+        msg: "Success App Deployed"
+
+    - name: Restart Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+
+    - name: Package Installed
+      ansible.builtin.debug:
+        msg: "Success Package Installed"
+
+    - name: Email Client
+      ansible.builtin.debug:
+        msg: "Inform Client Right NOW"

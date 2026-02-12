@@ -1,0 +1,47 @@
+- name: Changed When Run Handlers
+  hosts: servera*
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install Web Package
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+      register: captured
+      changed_when: not captured.changed
+      # Change Status from ok to changed
+      # to run Handlers
+      notify:
+        - Package Installed
+        - Restart Web Service
+        - Email Client
+
+    - name: Deploy Simple App
+      ansible.builtin.copy:
+        content: "Hello Ally Group Detroit"
+        dest: /var/www/html/index.html
+        mode: '0644'
+      notify:
+        - Restart Web Service
+        - App Deployed
+
+    - name: Extra Task
+      ansible.builtin.debug:
+        msg: "Success {{ elevator_floor }}"
+  handlers:
+    - name: App Deployed
+      ansible.builtin.debug:
+        msg: "Success App Deployed"
+
+    - name: Restart Web Service
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+
+    - name: Package Installed
+      ansible.builtin.debug:
+        msg: "Success Package Installed"
+
+    - name: Email Client
+      ansible.builtin.debug:
+        msg: "Inform Client Right NOW"

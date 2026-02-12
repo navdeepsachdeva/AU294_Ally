@@ -1,0 +1,14 @@
+- name: Play
+  hosts: servera*
+  gather_facts: false
+  tasks:
+    - name: Task 1
+      ansible.builtin.copy:
+        content: "HELLO ME"
+        dest: /tmp/file
+
+    - name: Read the File via command
+      ansible.builtin.command: cat /tmp/file
+
+    - name: Read the File via shell
+      ansible.builtin.shell: tail /tmp/file

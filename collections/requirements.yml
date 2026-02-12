@@ -1,0 +1,6 @@
+collections:
+  - name: community.crypto
+  - name: community.grafana
+  - name: community.general
+  - name: cisco.catalystwan
+  - name: /home/student/system-roles/redhat-rhel_system_roles-1.108.6.tar.gz

@@ -1,0 +1,27 @@
+<html>
+<head>
+ <title>Information Page</title>
+</head>
+<body>
+  {# Template for Collect Sys Info #}
+      ## Collect Information about {{ inventory_hostname }} ##
+
+          Floor           = {{ elevator_floor }}<br/>
+          FQDN            = {{ ansible_facts['fqdn'] }}<br/>
+          HostName        = {{ ansible_facts['hostname'] }}<br/>
+          Arch            = {{ ansible_facts['architecture'] }}<br/>
+          Date            = {{ ansible_facts['date_time']['date'] }}<br/>
+          Time            = {{ ansible_facts['date_time']['time'] }}<br/>
+          IP Address      = {{ ansible_default_ipv4.address }}<br/>
+          OS              = {{ ansible_distribution }}<br/>
+          Version         = {{ ansible_distribution_version }}<br/>
+          Kernel          = {{ ansible_facts['kernel'] }}<br/>
+          Total Memory    = {{ ansible_facts['memory_mb']['real']['total'] }}<br/>
+          Free Memory     = {{ ansible_facts['memory_mb']['real']['free'] }}<br/>
+          Python Version  = {{ ansible_facts['python_version'] }}<br/>
+          Dept Name       = {{ ansible_facts.ansible_local.emp.dept.d_name }}<br/>
+          Dept Location   = {{ ansible_facts.ansible_local.emp.dept.d_location }}<br/>
+          User Name       = {{ ansible_facts.ansible_local.emp.user.e_name }}<br/>
+
+</body>
+</html>

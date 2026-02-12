@@ -1,0 +1,84 @@
+- name: Block/Rescue/Always UNDO Last Known Stuff
+  hosts: servera*
+  gather_facts: true
+  become: true
+  force_handlers: true
+  tasks:
+    - name: Outside Block 1
+      ansible.builtin.debug:
+        msg: "Task 1 Outside Block "
+
+    - name: Block for Web Tasks
+      when: ansible_facts['memory_mb']['real']['total'] > 1500
+      block:
+        - name: Install Web Package
+          ansible.builtin.dnf:
+            name: httpd
+            state: present
+
+        - name: Deploy Simple App
+          ansible.builtin.copy:
+            content: "Hello Ally Group Detroit"
+            dest: /var/www/html/index.html
+            mode: '0644'
+
+        - name: Open Firewall Port
+          ansible.posix.firewalld:
+            service: http
+            permanent: true
+            state: enabled
+            immediate: true
+
+        - name: Extra Task
+          ansible.builtin.debug:
+            msg: "We are on {{ elevator_floor }}"
+            # msg: "We are on {{ elevator_floor }} {{ myvar }}"
+
+        - name: Restart Web Service
+          ansible.builtin.service:
+            name: httpd
+            state: restarted
+      rescue:
+        - name: Start UNDO
+          ansible.builtin.debug:
+            msg: "MayDay MayDay"
+
+        - name: Close Firewall Port
+          ansible.posix.firewalld:
+            service: http
+            permanent: true
+            state: disabled
+            immediate: true
+
+        - name: UnDeploy App
+          ansible.builtin.shell: rm -rf /var/www/html/*
+
+        - name: Uninstall Web Package
+          ansible.builtin.dnf:
+            name: httpd
+            state: absent
+            autoremove: true
+
+      always:
+        - name: Inform Client
+          ansible.builtin.debug:
+            msg: "Inform CLient about Success/Blunder"
+
+    - name: Outside Block 2
+      ansible.builtin.debug:
+        msg: "Task 2 Outside Block "
+
+  # handlers:
+
+  #   - name: App Deployed
+  #     ansible.builtin.debug:
+  #       msg: "Success App Deployed"
+
+
+  #   - name: Package Installed
+  #     ansible.builtin.debug:
+  #       msg: "Success Package Installed"
+
+  #   - name: Email Client
+  #     ansible.builtin.debug:
+  #       msg: "Inform Client Right NOW"
