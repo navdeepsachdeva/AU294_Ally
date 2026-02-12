@@ -853,7 +853,7 @@ https://docs.ansible.com/ansible/latest/inventory_guide/intro_patterns.html
 
 
 
-Announcement 1: LABS
+Announcement: LABS
 
 Chapter 7:
 	7.9. Lab: Reusing Code with Ansible Roles and Content Collections
